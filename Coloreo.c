@@ -30,59 +30,48 @@ void DFS(Grafo G, u32 inicio){
 u32 NotSoGreedy(Grafo G, u32 semilla) {
 		u32 seed = semilla;
 		u32 n = NumeroDeVertices(G);
-    u32 color;
+		u32 color;
     u32 color_maximo = 1;
-    bool colores_usados[n+1];
     u32 grado = 0;
-		bool use_rand=false;
-
-    G->orden[0]->color = 1;
-    for (u32 u = 1; u < n; u++) {
-			memset(colores_usados, false, (n+1)*sizeof(bool));
-			grado = G->orden[u]->grado;
+		linklist ll=NULL;
+		for(u32 i = 0 ; i<n;i++){
+			G->orden[i]->color=0;
+		}
+		G->orden[0]->color = 1;
+		for(u32 u = 1; u < n; u++){
+			grado = GradoDelVertice(G,u);
+			for(u32 i=1;i<=color_maximo;i++){
+				ll=AddNode(ll,i);
+			}
       for (u32 i = 0; i < grado; i++) {
-        color = G->orden[u]->vecinos[i]->color;
+				if(ll==NULL)
+					break;
+        color = ColorJotaesimoVecino(G,u,i);
         if (color!=0) {
-            colores_usados[color] = true;
+            ll=FindAndRemove(ll,color);
         }
       }
-      for (u32 j = 1; j < n + 1; j++) {
-        if (!colores_usados[j]) {
-					if(j>=color_maximo){
-						G->orden[u]->color=j;
-						color_maximo = j;
-						break;
-					}else if(j<color_maximo){
-							use_rand= true;
-							break;
+			if(ll!=NULL){
+				if(ll->next==NULL){
+					G->orden[u]->color=ll->value;
+				}else{
+					u32 count = CountLL(ll);
+					u32 colores_para_rand[count];
+					for(u32 j=0;j<count;j++){
+						u32 elem = ll->value;
+						colores_para_rand[j]=elem;
+						ll=DestroyfirstElemnt(ll);
 					}
+					u32 indice_crand = mi_rand(seed)%count;
+					G->orden[u]->color=colores_para_rand[indice_crand];
 				}
-      }
-			if(use_rand){
-				bool pintado=false;
-				u32 color_a_usar = 0;
-				u32 x = seed;
-				seed = mi_rand(x);
-				color_a_usar = seed % color_maximo;
-				if(color_a_usar==0){
-					color_a_usar++;
-				}
-				while(!pintado){
-					if(!colores_usados[color_a_usar]){
-						G->orden[u]->color = color_a_usar;
-						pintado = true;
-					}else{
-						if(color_a_usar>=color_maximo){
-							color_a_usar=1;
-						}else{
-							color_a_usar++;
-						}
-					}
-				}
-
+				free(ll);
+				ll=NULL;
+			}else{
+				color_maximo++;
+				G->orden[u]->color=color_maximo;
 			}
-
-  }
+		}
 	G->nro_colores=color_maximo;
 	return color_maximo;
 }

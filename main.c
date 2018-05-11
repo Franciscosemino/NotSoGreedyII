@@ -13,16 +13,22 @@ int main(){
 		double segundos;
 		tiempo_inicio = clock();
 		Grafo g = ConstruccionDelGrafo();
+		printf("CARGUE EL GRAFO\n" );
 		OrdenNatural(g);
-		for(u32 i = 0 ; i<NumeroDeVertices(g);i++){
-			printf("NombreDelVertice = %u\n",NombreDelVertice(g,i) );
-			printf("GradoDelVertice = %u\n",GradoDelVertice(g,i) );
-			for(u32 j = 0 ; j< GradoDelVertice(g,i);j++){
-				printf("nombre vecino %u del vertice = %u\n",j,NombreJotaesimoVecino(g,i,j) );
-				printf("grado del vecino %u del vertice = %u\n",j,GradoJotaesimoVecino(g,i,j) );
-			}
-			printf("--------------------------------\n" );
+		printf("ORDENE EL GRAFO\n" );
+
+		for(u32 i = 0; i< 1000; i++){
+			OrdenNatural(g);
+			u32 j = NotSoGreedy(g,i);
+			printf("NRO COLORES ORDEN NATURAL: %u\n",j );
+			ReordenManteniendoBloqueColores(g,2);
+			printf("NRO COLORES MANTENIENDO BLOQUES: %u\n",NotSoGreedy(g,i) );
 		}
+/*		for (u32 i = 0 ; i< NumeroDeVertices(g);i++){
+			printf("Soy el Vertice %u y mi COLOR ES: %u\n",NombreDelVertice(g,i),ColorDelVertice(g,i) );
+		}*/
+
+
 /*
 		printf("cant vertices %u\n",NumeroDeVertices(g) );
 		printf("cant lados %u\n", NumeroDeLados(g));
