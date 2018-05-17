@@ -59,7 +59,6 @@ void ReordenManteniendoBloqueColores(Grafo G,u32 x) {
       for (u32 i = 0; i<G->nro_vertices; i++) {
         G->orden[i]->cant_de_colores = NumeroDeVerticesDeColor(G, G->orden[i]->color);
       }
-      printf("\n");
       qsort(G->orden, G->nro_vertices, sizeof(PVertice), cmpfunccolor);
       qsort(G->orden, G->nro_vertices, sizeof(PVertice), cmpfunccantcolor);
     } else if (x > 1) {
